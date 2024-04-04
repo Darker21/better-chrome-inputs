@@ -26,11 +26,16 @@ jobs:
 
     - name: Determine Increment Type
       id: increment_type
-      run: echo "::set-output name=type::${{ github.ref == 'refs/heads/main' ? '' : 'patch' }}"
+      run: |
+        if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+          echo "INCREMENT_TYPE=" >> $GITHUB_ENV
+        else
+          echo "INCREMENT_TYPE=patch" >> $GITHUB_ENV
+        fi
     
     - name: Increment manifest version
       id: increment_version
-      run: node ./pipeline/increment-version.js ${{ github.event.inputs.versionOverride }} ${{ steps.increment_type.outputs.type }}
+      run: node increment-version.js ${{ github.event.inputs.versionOverride }} $INCREMENT_TYPE
 
     - name: Install Dependencies
       run: yarn install
