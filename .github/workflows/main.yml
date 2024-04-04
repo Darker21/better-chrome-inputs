@@ -1,0 +1,76 @@
+name: CI/CD Pipeline for Chrome Extension
+
+on:
+  push:
+    branches: [ main, feature/* ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      versionOverride:
+        description: 'Version Override (e.g., 1.2.3)'
+        required: false
+        type: string
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Determine Increment Type
+      id: increment_type
+      run: echo "::set-output name=type::${{ github.ref == 'refs/heads/main' ? '' : 'patch' }}"
+    
+    - name: Increment manifest version
+      id: increment_version
+      run: node ./pipeline/increment-version.js ${{ github.event.inputs.versionOverride }} ${{ steps.increment_type.outputs.type }}
+
+    - name: Install Dependencies
+      run: yarn install
+
+    - name: Lint
+      run: yarn lint
+
+    - name: Run Tests
+      run: yarn test
+
+    - name: Build
+      run: yarn build
+
+    - name: Zip the build directory
+      run: zip -r build.zip ./dist
+
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: build
+        path: build.zip
+
+    - name: Create Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ steps.increment_version.outputs.version }}
+        release_name: Release v${{ steps.increment_version.outputs.version }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./build.zip
+        asset_name: build.zip
+        asset_content_type: application/zip
