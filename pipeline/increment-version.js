@@ -1,5 +1,4 @@
 import fs from "node:fs";
-import path from "node:path";
 
 const manifestPath = "manifest.json";
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
