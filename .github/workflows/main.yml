@@ -35,7 +35,7 @@ jobs:
     
     - name: Increment manifest version
       id: increment_version
-      run: node increment-version.js ${{ github.event.inputs.versionOverride }} $INCREMENT_TYPE
+      run: node ./pipeline/increment-version.js ${{ github.event.inputs.versionOverride }} $INCREMENT_TYPE
 
     - name: Install Dependencies
       run: yarn install
