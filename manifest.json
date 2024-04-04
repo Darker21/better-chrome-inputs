@@ -1,0 +1,24 @@
+{
+    "$schema": "https://json.schemastore.org/chrome-manifest.json",
+    "manifest_version": 3,
+    "name": "Better Chrome Inputs",
+    "description": "Chrome browser extension to create better inputs and scripts to autofill commonly visited sites",
+    "version": "1.0",
+    "icons": {
+        "16": "images/icon-16.png"
+    },
+    "action": {
+        "default_icon": {
+            "16": "images/icon-16.png"
+        }
+    },
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "permissions": [
+        "activeTab",
+        "storage",
+        "scripting"
+    ]
+}
