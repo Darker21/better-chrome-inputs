@@ -1,5 +1,3 @@
-import darkerSoftwareTheme from "darker-software-tailwind-theme/theme/darker.software.tailwind";
-
 /** @type {import('tailwindcss').Config} */
 export default {
   presets: [
