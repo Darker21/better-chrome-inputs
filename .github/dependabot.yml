@@ -10,9 +10,17 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    target-branch: "main"
+    labels: "GitHub.Actions Dependencies"
+    commit-message:
+      prefix: "[GitHub.Actions] "
 
   # Maintain dependencies for npm/yarn
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "monthly"
+    target-branch: "main"
+    labels: "NPM Dependencies"
+    commit-message:
+      prefix: "[NPM/Yarn] "
