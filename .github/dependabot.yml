@@ -11,7 +11,9 @@ updates:
     schedule:
       interval: "weekly"
     target-branch: "main"
-    labels: "GitHub.Actions Dependencies"
+    labels: 
+      -  "GitHub.Actions"
+      -  "Dependencies"
     commit-message:
       prefix: "[GitHub.Actions] "
 
@@ -21,6 +23,8 @@ updates:
     schedule:
       interval: "monthly"
     target-branch: "main"
-    labels: "NPM Dependencies"
+    labels: 
+      -  "NPM"
+      - "Dependencies"
     commit-message:
       prefix: "[NPM/Yarn] "
